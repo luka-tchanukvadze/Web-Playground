@@ -1,8 +1,11 @@
+import PostsProvider from "./contexts/posts/PostsContext";
+import Posts from "./pages/Posts";
+
 function App() {
   return (
-    <>
-      <div>hey</div>
-    </>
+    <PostsProvider>
+      <Posts />
+    </PostsProvider>
   );
 }
 
