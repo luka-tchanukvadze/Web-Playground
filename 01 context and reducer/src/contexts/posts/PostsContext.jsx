@@ -6,10 +6,21 @@ export const PostsContext = createContext();
 const initialState = {
   count: 0,
   post: {},
+  isLoading: false,
+  error: "",
 };
 
 function reducer(state, action) {
   switch (action.type) {
+    case "reset":
+      return initialState;
+
+    case "loading":
+      return {
+        ...state,
+        isLoading: true,
+      };
+
     case "count/increment":
       return {
         ...state,
@@ -20,6 +31,14 @@ function reducer(state, action) {
       return {
         ...state,
         post: action.payload,
+        isLoading: false,
+      };
+
+    case "rejected":
+      return {
+        ...state,
+        error: action.payload,
+        isLoading: false,
       };
 
     default:
@@ -28,22 +47,35 @@ function reducer(state, action) {
 }
 
 export default function PostsProvider({ children }) {
-  const [{ count, post }, dispatch] = useReducer(reducer, initialState);
+  const [{ count, post, isLoading, error }, dispatch] = useReducer(
+    reducer,
+    initialState
+  );
 
   const getPost = async (id) => {
+    dispatch({ type: "loading" });
+
     try {
       const res = await fetch(
-        `https://jsonplaceholder.typicode.com/posts/${id}`
+        `https://jsonplaceholder.typicode.com/psts/${id}`
       );
+
+      if (!res.ok) {
+        throw new Error("Request fialed");
+      }
+
       const data = await res.json();
       dispatch({ type: "post/loaded", payload: data });
     } catch (error) {
-      console.log(error.message);
+      console.log("aaa", error.message);
+      dispatch({ type: "rejected", payload: "Could not fetch" });
     }
   };
 
   return (
-    <PostsContext.Provider value={{ count, dispatch, getPost, post }}>
+    <PostsContext.Provider
+      value={{ count, dispatch, getPost, post, isLoading, error }}
+    >
       {children}
     </PostsContext.Provider>
   );

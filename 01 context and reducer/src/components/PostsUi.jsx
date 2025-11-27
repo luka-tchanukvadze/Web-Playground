@@ -1,7 +1,7 @@
 import { usePosts } from "../contexts/posts/usePosts";
 
 function PostsUi() {
-  const { count, dispatch, post, getPost } = usePosts();
+  const { count, dispatch, post, getPost, isLoading, error } = usePosts();
 
   const handleClick = () => {
     const nextCount = count + 1;
@@ -11,9 +11,18 @@ function PostsUi() {
 
   return (
     <>
-      <div onClick={handleClick}>count: {count}</div>
+      <button onClick={handleClick}>count: {count}</button>
 
-      <div> {post?.id}</div>
+      {isLoading ? <div>Loading....</div> : <div> {post?.title}</div>}
+      {error && <div>{error}</div>}
+
+      <button
+        onClick={() => {
+          dispatch({ type: "reset" });
+        }}
+      >
+        reset
+      </button>
     </>
   );
 }
