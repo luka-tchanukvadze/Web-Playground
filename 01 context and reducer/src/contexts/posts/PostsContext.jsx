@@ -1,4 +1,4 @@
-import { createContext, useReducer } from "react";
+import { createContext, useEffect, useReducer, useState } from "react";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const PostsContext = createContext();
@@ -52,6 +52,26 @@ export default function PostsProvider({ children }) {
     initialState
   );
 
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const res = await fetch("https://jsonplaceholder.typicode.com/posts");
+
+        if (!res.ok) throw new Error("Error fetching posts");
+
+        const data = await res.json();
+
+        setPosts(data);
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
+
+    fetchPosts();
+  }, []);
+
   const getPost = async (id) => {
     dispatch({ type: "loading" });
 
@@ -74,7 +94,7 @@ export default function PostsProvider({ children }) {
 
   return (
     <PostsContext.Provider
-      value={{ count, dispatch, getPost, post, isLoading, error }}
+      value={{ count, dispatch, getPost, post, isLoading, error, posts }}
     >
       {children}
     </PostsContext.Provider>
