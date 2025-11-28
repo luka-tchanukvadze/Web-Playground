@@ -1,4 +1,4 @@
-import { createContext, useEffect, useReducer, useState } from "react";
+import { createContext, useEffect, useReducer } from "react";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const PostsContext = createContext();
@@ -6,6 +6,7 @@ export const PostsContext = createContext();
 const initialState = {
   count: 0,
   post: {},
+  posts: [],
   isLoading: false,
   error: "",
 };
@@ -33,6 +34,11 @@ function reducer(state, action) {
         post: action.payload,
         isLoading: false,
       };
+    case "posts/loaded":
+      return {
+        ...state,
+        posts: action.payload,
+      };
 
     case "rejected":
       return {
@@ -47,12 +53,10 @@ function reducer(state, action) {
 }
 
 export default function PostsProvider({ children }) {
-  const [{ count, post, isLoading, error }, dispatch] = useReducer(
+  const [{ count, post, isLoading, error, posts }, dispatch] = useReducer(
     reducer,
     initialState
   );
-
-  const [posts, setPosts] = useState([]);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -63,14 +67,14 @@ export default function PostsProvider({ children }) {
 
         const data = await res.json();
 
-        setPosts(data);
+        dispatch({ type: "posts/loaded", payload: data });
       } catch (error) {
         console.log(error.message);
       }
     };
 
     fetchPosts();
-  }, []);
+  }, [dispatch]);
 
   const getPost = async (id) => {
     dispatch({ type: "loading" });
