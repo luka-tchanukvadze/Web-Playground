@@ -38,6 +38,7 @@ function reducer(state, action) {
       return {
         ...state,
         posts: action.payload,
+        isLoading: false,
       };
 
     case "rejected":
@@ -60,6 +61,7 @@ export default function PostsProvider({ children }) {
 
   useEffect(() => {
     const fetchPosts = async () => {
+      dispatch({ type: "loading" });
       try {
         const res = await fetch("https://jsonplaceholder.typicode.com/posts");
 
@@ -70,6 +72,7 @@ export default function PostsProvider({ children }) {
         dispatch({ type: "posts/loaded", payload: data });
       } catch (error) {
         console.log(error.message);
+        dispatch({ type: "rejected", payload: error.message });
       }
     };
 
@@ -92,7 +95,7 @@ export default function PostsProvider({ children }) {
       dispatch({ type: "post/loaded", payload: data });
     } catch (error) {
       console.log("aaa", error.message);
-      dispatch({ type: "rejected", payload: "Could not fetch" });
+      dispatch({ type: "rejected", payload: error.message });
     }
   };
 
