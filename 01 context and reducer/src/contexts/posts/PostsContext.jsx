@@ -20,6 +20,7 @@ function reducer(state, action) {
       return {
         ...state,
         isLoading: true,
+        error: "",
       };
 
     case "count/increment":
@@ -59,32 +60,28 @@ export default function PostsProvider({ children }) {
     initialState
   );
 
-  useEffect(() => {
-    const fetchPosts = async () => {
-      dispatch({ type: "loading" });
-      try {
-        const res = await fetch("https://jsonplaceholder.typicode.com/posts");
+  const fetchPosts = async () => {
+    dispatch({ type: "loading" });
+    try {
+      const res = await fetch("https://jsonplaceholder.typicode.com/posts");
 
-        if (!res.ok) throw new Error("Error fetching posts");
+      if (!res.ok) throw new Error("Error fetching posts");
 
-        const data = await res.json();
+      const data = await res.json();
 
-        dispatch({ type: "posts/loaded", payload: data });
-      } catch (error) {
-        console.log(error.message);
-        dispatch({ type: "rejected", payload: error.message });
-      }
-    };
-
-    fetchPosts();
-  }, [dispatch]);
+      dispatch({ type: "posts/loaded", payload: data });
+    } catch (error) {
+      console.log(error.message);
+      dispatch({ type: "rejected", payload: error.message });
+    }
+  };
 
   const getPost = async (id) => {
     dispatch({ type: "loading" });
 
     try {
       const res = await fetch(
-        `https://jsonplaceholder.typicode.com/psts/${id}`
+        `https://jsonplaceholder.typicode.com/posts/${id}`
       );
 
       if (!res.ok) {
@@ -98,6 +95,10 @@ export default function PostsProvider({ children }) {
       dispatch({ type: "rejected", payload: error.message });
     }
   };
+
+  useEffect(() => {
+    fetchPosts();
+  }, []);
 
   return (
     <PostsContext.Provider

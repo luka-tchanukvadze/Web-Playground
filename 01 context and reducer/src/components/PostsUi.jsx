@@ -1,10 +1,11 @@
+import { useMemo } from "react";
 import { usePosts } from "../contexts/posts/usePosts";
 
 function PostsUi() {
   const { count, dispatch, post, getPost, isLoading, error, posts } =
     usePosts();
 
-  let slicedPosts = posts.slice(0, 5);
+  let slicedPosts = useMemo(() => posts.slice(0, 5), [posts]);
 
   const handleClick = () => {
     const nextCount = count + 1;
