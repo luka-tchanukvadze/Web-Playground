@@ -3,10 +3,18 @@ import { usePosts } from "../contexts/posts/usePosts";
 
 function PostsUi() {
   const [text, setText] = useState("");
-  const [searched, setSearch] = useState([]);
 
-  const { count, dispatch, post, getPost, isLoading, error, posts } =
-    usePosts();
+  const {
+    count,
+    dispatch,
+    post,
+    getPost,
+    isLoading,
+    error,
+    posts,
+    searchPost,
+    searchedPost,
+  } = usePosts();
 
   let slicedPosts = useMemo(() => posts.slice(0, 5), [posts]);
 
@@ -20,11 +28,7 @@ function PostsUi() {
     e.preventDefault();
     let value = e.target.value;
     setText(value);
-
-    const filtered = posts.filter((post) =>
-      post.title.toLowerCase().includes(value.toLowerCase())
-    );
-    setSearch(filtered);
+    searchPost(value);
   }
 
   return (
@@ -33,7 +37,7 @@ function PostsUi() {
       <input name="text" value={text} onChange={handleChange} />
 
       <div>
-        {searched?.map((post) => (
+        {searchedPost?.map((post) => (
           <h1 key={post.id}>{post.title}</h1>
         ))}
       </div>

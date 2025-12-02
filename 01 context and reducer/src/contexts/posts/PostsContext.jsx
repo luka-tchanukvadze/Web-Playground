@@ -7,6 +7,7 @@ const initialState = {
   count: 0,
   post: {},
   posts: [],
+  searchedPost: [],
   isLoading: false,
   error: "",
 };
@@ -49,16 +50,20 @@ function reducer(state, action) {
         isLoading: false,
       };
 
+    case "posts/searched":
+      return {
+        ...state,
+        searchedPost: action.payload,
+      };
+
     default:
       throw new Error("Action unknown");
   }
 }
 
 export default function PostsProvider({ children }) {
-  const [{ count, post, isLoading, error, posts }, dispatch] = useReducer(
-    reducer,
-    initialState
-  );
+  const [{ count, post, isLoading, error, posts, searchedPost }, dispatch] =
+    useReducer(reducer, initialState);
 
   const fetchPosts = async () => {
     dispatch({ type: "loading" });
@@ -96,13 +101,30 @@ export default function PostsProvider({ children }) {
     }
   };
 
+  function searchPost(value) {
+    const filtered = posts.filter((post) =>
+      post.title.toLowerCase().includes(value.toLowerCase())
+    );
+    dispatch({ type: "posts/searched", payload: filtered });
+  }
+
   useEffect(() => {
     fetchPosts();
   }, []);
 
   return (
     <PostsContext.Provider
-      value={{ count, dispatch, getPost, post, isLoading, error, posts }}
+      value={{
+        count,
+        dispatch,
+        getPost,
+        post,
+        isLoading,
+        error,
+        posts,
+        searchedPost,
+        searchPost,
+      }}
     >
       {children}
     </PostsContext.Provider>
