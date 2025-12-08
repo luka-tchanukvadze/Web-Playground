@@ -108,6 +108,12 @@ export default function PostsProvider({ children }) {
     dispatch({ type: "posts/searched", payload: filtered });
   }
 
+  function increaseNumber() {
+    const nextCount = count + 1;
+    dispatch({ type: "count/increment" });
+    getPost(nextCount);
+  }
+
   useEffect(() => {
     fetchPosts();
   }, []);
@@ -124,6 +130,7 @@ export default function PostsProvider({ children }) {
         posts,
         searchedPost,
         searchPost,
+        increaseNumber,
       }}
     >
       {children}

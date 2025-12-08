@@ -6,22 +6,19 @@ function PostsUi() {
 
   const {
     count,
-    dispatch,
     post,
-    getPost,
     isLoading,
     error,
     posts,
     searchPost,
     searchedPost,
+    increaseNumber,
   } = usePosts();
 
   let slicedPosts = useMemo(() => posts.slice(0, 5), [posts]);
 
   const handleClick = () => {
-    const nextCount = count + 1;
-    dispatch({ type: "count/increment" });
-    getPost(nextCount);
+    increaseNumber();
   };
 
   function handleChange(e) {
