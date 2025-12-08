@@ -17,12 +17,7 @@ function PostsUi() {
 
   let slicedPosts = useMemo(() => posts.slice(0, 5), [posts]);
 
-  const handleClick = () => {
-    increaseNumber();
-  };
-
   function handleChange(e) {
-    e.preventDefault();
     let value = e.target.value;
     setText(value);
     searchPost(value);
@@ -53,7 +48,7 @@ function PostsUi() {
       <br></br>
       <br></br>
       {/* getting post on click */}
-      <button onClick={handleClick}>count: {count}</button>
+      <button onClick={increaseNumber}>count: {count}</button>
 
       {isLoading ? <div>Loading....</div> : <div> {post?.title}</div>}
       {error && <div>{error}</div>}
