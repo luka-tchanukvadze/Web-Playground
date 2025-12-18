@@ -10,6 +10,7 @@ const initialState = {
   searchedPost: [],
   isLoading: false,
   error: "",
+  twoPayload: "",
 };
 
 function reducer(state, action) {
@@ -43,6 +44,12 @@ function reducer(state, action) {
         isLoading: false,
       };
 
+    case "practice/payloads":
+      return {
+        ...state,
+        twoPayload: `${action.payload.name} ${action.payload.lastName}`,
+      };
+
     case "rejected":
       return {
         ...state,
@@ -62,8 +69,10 @@ function reducer(state, action) {
 }
 
 export default function PostsProvider({ children }) {
-  const [{ count, post, isLoading, error, posts, searchedPost }, dispatch] =
-    useReducer(reducer, initialState);
+  const [
+    { count, post, isLoading, error, posts, searchedPost, twoPayload },
+    dispatch,
+  ] = useReducer(reducer, initialState);
 
   const fetchPosts = async () => {
     dispatch({ type: "loading" });
@@ -118,6 +127,16 @@ export default function PostsProvider({ children }) {
     fetchPosts();
   }, []);
 
+  function myName(name, lastName) {
+    dispatch({
+      type: "practice/payloads",
+      payload: {
+        name,
+        lastName,
+      },
+    });
+  }
+
   return (
     <PostsContext.Provider
       value={{
@@ -131,6 +150,8 @@ export default function PostsProvider({ children }) {
         searchedPost,
         searchPost,
         increaseNumber,
+        twoPayload,
+        myName,
       }}
     >
       {children}

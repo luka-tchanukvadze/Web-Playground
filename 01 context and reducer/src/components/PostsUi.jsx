@@ -13,6 +13,8 @@ function PostsUi() {
     searchPost,
     searchedPost,
     increaseNumber,
+    twoPayload,
+    myName,
   } = usePosts();
 
   let slicedPosts = useMemo(() => posts.slice(0, 5), [posts]);
@@ -25,6 +27,8 @@ function PostsUi() {
 
   return (
     <>
+      <h1>{twoPayload || "Wait for it..."} - he he</h1>
+      <button onClick={() => myName("Luka", "Chanu")}>Set my name</button>
       <h1>SEARCH</h1>
       <input name="text" value={text} onChange={handleChange} />
 
@@ -38,7 +42,7 @@ function PostsUi() {
         <h1>POSTS</h1>
         <div>
           {slicedPosts.map((post) => (
-            <h3>{post.title}</h3>
+            <h3 key={post.id}>{post.title}</h3>
           ))}
         </div>
       </div>
