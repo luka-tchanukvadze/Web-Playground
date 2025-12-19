@@ -127,13 +127,10 @@ export default function PostsProvider({ children }) {
     fetchPosts();
   }, []);
 
-  function myName(name, lastName) {
+  function myName(payload) {
     dispatch({
       type: "practice/payloads",
-      payload: {
-        name,
-        lastName,
-      },
+      payload,
     });
   }
 

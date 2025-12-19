@@ -28,7 +28,9 @@ function PostsUi() {
   return (
     <>
       <h1>{twoPayload || "Wait for it..."} - he he</h1>
-      <button onClick={() => myName("Luka", "Chanu")}>Set my name</button>
+      <button onClick={() => myName({ name: "Luka", lastName: "Chanu" })}>
+        Set my name
+      </button>
       <h1>SEARCH</h1>
       <input name="text" value={text} onChange={handleChange} />
 
